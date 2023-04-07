@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Flutter图片缓存管理-ImageCache | Weniner</title><meta name="keywords" content="掘金·日新计划"><meta name="author" content="Weniner"><meta name="copyright" content="Weniner"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="highlight: githubtheme: channing-cyan  开启掘金成长之旅！这是我参与「掘金日新计划 · 12 月更文挑战」的第3天，点击查看活动详情  设计: 嗯? 这个图片点击跳转进详情再返回图片怎么变白闪一下呢?产品: 是啊是啊! 一定是个bug开发: 囧囧囧  在开发过程中, 也许你也遇到过这样一个场景. 进入一个页面后,前一个页面的图片都会闪白一下. 或者在列表">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter图片缓存管理-ImageCache">
+<meta property="og:url" content="https://weniner.github.io/2022/11/23/Flutter%E5%9B%BE%E7%89%87%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86-ImageCache/index.html">
+<meta property="og:site_name" content="Weniner">
+<meta property="og:description" content="highlight: githubtheme: channing-cyan  开启掘金成长之旅！这是我参与「掘金日新计划 · 12 月更文挑战」的第3天，点击查看活动详情  设计: 嗯? 这个图片点击跳转进详情再返回图片怎么变白闪一下呢?产品: 是啊是啊! 一定是个bug开发: 囧囧囧  在开发过程中, 也许你也遇到过这样一个场景. 进入一个页面后,前一个页面的图片都会闪白一下. 或者在列表">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg">
+<meta property="article:published_time" content="2022-11-23T03:31:58.000Z">
+<meta property="article:modified_time" content="2023-04-07T10:11:15.153Z">
+<meta property="article:author" content="Weniner">
+<meta property="article:tag" content="掘金·日新计划">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://weniner.github.io/2022/11/23/Flutter%E5%9B%BE%E7%89%87%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86-ImageCache/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Flutter图片缓存管理-ImageCache',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-04-07 18:11:15'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/37212120?v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/recommend/"><i class="fa-fw fas fa-crow"></i><span> 推荐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Weniner</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/recommend/"><i class="fa-fw fas fa-crow"></i><span> 推荐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Flutter图片缓存管理-ImageCache</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-23T03:31:58.000Z" title="发表于 2022-11-23 11:31:58">2022-11-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-04-07T10:11:15.153Z" title="更新于 2023-04-07 18:11:15">2023-04-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Android/">Android</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Flutter图片缓存管理-ImageCache"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<hr>
+<p>highlight: github<br>theme: channing-cyan</p>
+<hr>
+<p>开启掘金成长之旅！这是我参与「掘金日新计划 · 12 月更文挑战」的第3天，<a target="_blank" rel="noopener" href="https://juejin.cn/post/7167294154827890702" title="https://juejin.cn/post/7167294154827890702">点击查看活动详情</a></p>
+<blockquote>
+<p>设计: 嗯? 这个图片点击跳转进详情再返回图片怎么变白闪一下呢?<br><br>产品: 是啊是啊! 一定是个bug<br><br>开发: 囧囧囧</p>
+</blockquote>
+<p>在开发过程中, 也许你也遇到过这样一个场景. 进入一个页面后,前一个页面的图片都会闪白一下. 或者在列表中,加载很多列表项后,之前列表中的图片都需要重新加载.你有没有想过这一切的原因是什么呢? </p>
+<p>没错! 它就是我们今天介绍的主人公 — <em>ImageCache</em></p>
+<p>可能有些人对<em>ImageCache</em>还有些陌生, 我们在之前的章节有说过启动流程时<a target="_blank" rel="noopener" href="https://juejin.cn/post/7168407914221142046/">Flutter runApp到渲染上屏</a>,有介绍过其中<em>PaintingBinding</em>这个mixin类.带着探索的心我们先去看看<em>PaintingBinding</em>都做了 一些什么操作呢?</p>
+<h2 id="PaintingBinding"><a href="#PaintingBinding" class="headerlink" title="PaintingBinding"></a>PaintingBinding</h2><p><em>PaintingBinding</em>在构造函数中,除了构建自身的实例.同时也构建了图片缓存的管理实例.也包括了着色器预热.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    _instance = this;</span><br><span class="line">    // 创建了图片缓存管理</span><br><span class="line">    _imageCache = createImageCache();</span><br><span class="line">    shaderWarmUp?.execute();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>着色器预热可能大部分人都没有接触过,我们只需要知道通过着色器预热,可以提高首次编译的速度即可.有兴趣可以看一下这篇文章<a target="_blank" rel="noopener" href="https://docs.flutter.dev/perf/shader">着色器预热</a>;<br>我们现在把目光重新聚焦到今天的主题, 也就是<em>createImageCache()<em>这里.可以看到它直接返回了一个ImageCache的对象. 这里我们暂且不谈ImageCache, 再去看看在</em>PaintingBinding</em>有没有和ImageCache相关的一些代码吧.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@override</span><br><span class="line">void evict(String asset) &#123;</span><br><span class="line">  // 调用了rootBundle.evict(asset);</span><br><span class="line">  // 也就是从缓存中移除这个key的资源</span><br><span class="line">  super.evict(asset);</span><br><span class="line">  // 清除所有已显示和不再用到的图片缓存</span><br><span class="line">  imageCache.clear();</span><br><span class="line">  // 清除所有实时引用的图片缓存</span><br><span class="line">  imageCache.clearLiveImages();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@override</span><br><span class="line">void handleMemoryPressure() &#123;</span><br><span class="line">  // rootBundle.clear();</span><br><span class="line">  // 当操作系统通知应用程序内存压力情况时调用。</span><br><span class="line">  // 清除所有的图片资源</span><br><span class="line">  super.handleMemoryPressure();</span><br><span class="line">  imageCache.clear();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>可以看到, 基本上所有的引用都避不开内存问题. 也就是文章开头出现的bug. 那么,为什么会出现闪白呢? 有多种可能,有可能是系统感受到了内存压力调用了<em>handleMemoryPressure()</em> 方法,清除了图片缓存,或者在<em>ImageCache</em>中,达到了最大缓存,因此内部根据<em>least-recently-used</em>的原则回收了图片缓存.所以回头再看的时候,图片又重新加载了一遍.自然发生了闪白现象.<br>既然知道了原因,那么解决问题的方法:</p>
+<ul>
+<li>减少图片缓存</li>
+<li>增大图片缓存的阀值,让系统感觉到压力的阀值提升<br>我们来分别分析一下两者的可行性</li>
+</ul>
+<h3 id="减少图片缓存"><a href="#减少图片缓存" class="headerlink" title="减少图片缓存"></a>减少图片缓存</h3><p>如果要减少图片缓存, 我们要知道图片的内存是怎么计算的?<br>图片内存&#x3D;分辨率*每个像素点大小<br>减少的方法也就出来了:</p>
+<ul>
+<li>减少分辨率<br><br>也就是降低采样率.flutter中即<em>cacheHeight</em>和<em>cacheWidth</em></li>
+<li>减少像素点大小<br><br>这里也就是像素点的格式,ALPHA_8、RGB_565、ARGB_4444、ARGB_8888、RGBA_F16这些</li>
+</ul>
+<h3 id="增大阀值"><a href="#增大阀值" class="headerlink" title="增大阀值"></a>增大阀值</h3><p>这里需要去看一下<em>ImageCache</em>中.我们推断一下,什么情况下一个缓存池会达到阀值呢?<br>那一定是有新图片插入,所以总量才会提升才会够到阀值的门槛.我们找一下有没有相关的方法. 嗯哼~ 果然有一个*_checkCacheSize*</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    // 只要当前的内存超标就会一直执行下去</span><br><span class="line">    while (_currentSizeBytes &gt; _maximumSizeBytes || _cache.length &gt; _maximumSize) &#123;</span><br><span class="line">      // 根据least-recently-used这个逻辑去依次清除图片缓存</span><br><span class="line">      final Object key = _cache.keys.first;</span><br><span class="line">      final _CachedImage image = _cache[key]!;</span><br><span class="line">      _currentSizeBytes -= image.sizeBytes!;</span><br><span class="line">      image.dispose();</span><br><span class="line">      _cache.remove(key);</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>说明我们阀值取决于*_maximumSizeBytes<em>和</em>_maximumSize*, 一个负责最大缓存图片内存,一个负责最大缓存图片数. 也就是说我们更新这两个指就可以改变图片内存的阀值.从而减少内存回收的频率.</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>很多问题的发生实际上源码中都有些提示, 带着问题去看收获的远远比单独阅读源码要有收获的多.<br><br>这里是weniner,一个在奋斗的flutter. 有些收获的话,不妨点个关注哦!</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://weniner.github.io">Weniner</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://weniner.github.io/2022/11/23/Flutter%E5%9B%BE%E7%89%87%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86-ImageCache/">https://weniner.github.io/2022/11/23/Flutter%E5%9B%BE%E7%89%87%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86-ImageCache/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://weniner.github.io" target="_blank">Weniner</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%8E%98%E9%87%91%C2%B7%E6%97%A5%E6%96%B0%E8%AE%A1%E5%88%92/">掘金·日新计划</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/11/24/Flutter%20%E6%96%87%E5%AD%97%E7%89%B9%E6%95%88%E4%B9%8B%E8%B7%91%E9%A9%AC%E7%81%AF/"><img class="prev-cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Flutter 文字特效之跑马灯</div></div></a></div><div class="next-post pull-right"><a href="/2022/11/22/Flutter%20runApp%E4%B9%8BGestureBinding/"><img class="next-cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Flutter runApp之GestureBinding</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/11/22/Flutter%20runApp%E4%B9%8BGestureBinding/" title="Flutter runApp之GestureBinding"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-22</div><div class="title">Flutter runApp之GestureBinding</div></div></a></div><div><a href="/2022/11/21/Flutter%20runApp%20%E5%88%B0%E6%B8%B2%E6%9F%93%E4%B8%8A%E5%B1%8F/" title="Flutter runApp 到渲染上屏"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-21</div><div class="title">Flutter runApp 到渲染上屏</div></div></a></div><div><a href="/2022/12/30/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8B%20AnimatedAlign/" title="Flutter 组件分析之 AnimatedAlign"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-30</div><div class="title">Flutter 组件分析之 AnimatedAlign</div></div></a></div><div><a href="/2022/12/29/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BDraggable/" title="Flutter 组件分析之Draggable"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-29</div><div class="title">Flutter 组件分析之Draggable</div></div></a></div><div><a href="/2022/12/22/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BConstrainedBox/" title="Flutter 组件分析之ConstrainedBox"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-22</div><div class="title">Flutter 组件分析之ConstrainedBox</div></div></a></div><div><a href="/2022/12/28/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BOverflowBox/" title="Flutter 组件分析之OverflowBox"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-28</div><div class="title">Flutter 组件分析之OverflowBox</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://avatars.githubusercontent.com/u/37212120?v=4" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Weniner</div><div class="author-info__description">隐居山水之间誓与浮名散</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/weniner"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/weniner" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/weninerdroid@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">不定时更新博文</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PaintingBinding"><span class="toc-number">1.</span> <span class="toc-text">PaintingBinding</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%8F%E5%B0%91%E5%9B%BE%E7%89%87%E7%BC%93%E5%AD%98"><span class="toc-number">1.1.</span> <span class="toc-text">减少图片缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%A4%A7%E9%98%80%E5%80%BC"><span class="toc-number">1.2.</span> <span class="toc-text">增大阀值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%80%83"><span class="toc-number">2.</span> <span class="toc-text">思考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/04/07/Flutter%E4%BB%8ErunApp%E5%88%B0%E7%BB%98%E5%88%B6%E4%B8%8A%E5%B1%8F/" title="Flutter从runApp到绘制上屏"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Flutter从runApp到绘制上屏"/></a><div class="content"><a class="title" href="/2023/04/07/Flutter%E4%BB%8ErunApp%E5%88%B0%E7%BB%98%E5%88%B6%E4%B8%8A%E5%B1%8F/" title="Flutter从runApp到绘制上屏">Flutter从runApp到绘制上屏</a><time datetime="2023-04-07T09:48:52.000Z" title="发表于 2023-04-07 17:48:52">2023-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/12/30/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8B%20AnimatedAlign/" title="Flutter 组件分析之 AnimatedAlign"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Flutter 组件分析之 AnimatedAlign"/></a><div class="content"><a class="title" href="/2022/12/30/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8B%20AnimatedAlign/" title="Flutter 组件分析之 AnimatedAlign">Flutter 组件分析之 AnimatedAlign</a><time datetime="2022-12-30T07:18:17.000Z" title="发表于 2022-12-30 15:18:17">2022-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/12/29/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BDraggable/" title="Flutter 组件分析之Draggable"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Flutter 组件分析之Draggable"/></a><div class="content"><a class="title" href="/2022/12/29/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BDraggable/" title="Flutter 组件分析之Draggable">Flutter 组件分析之Draggable</a><time datetime="2022-12-29T10:05:18.000Z" title="发表于 2022-12-29 18:05:18">2022-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/12/28/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BOverflowBox/" title="Flutter 组件分析之OverflowBox"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Flutter 组件分析之OverflowBox"/></a><div class="content"><a class="title" href="/2022/12/28/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BOverflowBox/" title="Flutter 组件分析之OverflowBox">Flutter 组件分析之OverflowBox</a><time datetime="2022-12-28T09:32:47.000Z" title="发表于 2022-12-28 17:32:47">2022-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/12/24/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BMediaQuery/" title="Flutter 组件分析之MediaQuery"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Flutter 组件分析之MediaQuery"/></a><div class="content"><a class="title" href="/2022/12/24/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BMediaQuery/" title="Flutter 组件分析之MediaQuery">Flutter 组件分析之MediaQuery</a><time datetime="2022-12-24T01:54:04.000Z" title="发表于 2022-12-24 09:54:04">2022-12-24</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Weniner</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  var disqus_config = function () {
+    this.page.url = 'https://weniner.github.io/2022/11/23/Flutter%E5%9B%BE%E7%89%87%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86-ImageCache/'
+    this.page.identifier = '/2022/11/23/Flutter%E5%9B%BE%E7%89%87%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86-ImageCache/'
+    this.page.title = 'Flutter图片缓存管理-ImageCache'
+  };
+
+  window.disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+
+  document.getElementById('darkmode').addEventListener('click', () => {
+    setTimeout(() => window.disqusReset(), 200)
+  })
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

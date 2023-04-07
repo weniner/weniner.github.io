@@ -1,0 +1,261 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Flutter 组件分析之SizedBox | Weniner</title><meta name="keywords" content="掘金·日新计划 Flutter 前端"><meta name="author" content="Weniner"><meta name="copyright" content="Weniner"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="highlight: agatetheme: channing-cyan  开启掘金成长之旅！这是我参与「掘金日新计划 · 12 月更文挑战」的第20天，点击查看活动详情  本系列教程基于Flutter widget, 意在为Flutter 入门提供基础建设. 重点在讲解widget 的 用法,参数以及扩展. 适宜人群: 入门  引语SizedBox 是 Flutter 中较为常见的组件之一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter 组件分析之SizedBox">
+<meta property="og:url" content="https://weniner.github.io/2022/12/15/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BSizedBox/index.html">
+<meta property="og:site_name" content="Weniner">
+<meta property="og:description" content="highlight: agatetheme: channing-cyan  开启掘金成长之旅！这是我参与「掘金日新计划 · 12 月更文挑战」的第20天，点击查看活动详情  本系列教程基于Flutter widget, 意在为Flutter 入门提供基础建设. 重点在讲解widget 的 用法,参数以及扩展. 适宜人群: 入门  引语SizedBox 是 Flutter 中较为常见的组件之一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg">
+<meta property="article:published_time" content="2022-12-15T01:51:09.000Z">
+<meta property="article:modified_time" content="2023-04-07T10:11:15.150Z">
+<meta property="article:author" content="Weniner">
+<meta property="article:tag" content="掘金·日新计划 Flutter 前端">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://weniner.github.io/2022/12/15/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BSizedBox/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Flutter 组件分析之SizedBox',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-04-07 18:11:15'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/37212120?v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/recommend/"><i class="fa-fw fas fa-crow"></i><span> 推荐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Weniner</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/recommend/"><i class="fa-fw fas fa-crow"></i><span> 推荐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Flutter 组件分析之SizedBox</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-12-15T01:51:09.000Z" title="发表于 2022-12-15 09:51:09">2022-12-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-04-07T10:11:15.150Z" title="更新于 2023-04-07 18:11:15">2023-04-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Android/">Android</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Flutter 组件分析之SizedBox"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<hr>
+<p>highlight: agate<br>theme: channing-cyan</p>
+<hr>
+<p>开启掘金成长之旅！这是我参与「掘金日新计划 · 12 月更文挑战」的第20天，<a target="_blank" rel="noopener" href="https://juejin.cn/post/7167294154827890702" title="https://juejin.cn/post/7167294154827890702">点击查看活动详情</a></p>
+<blockquote>
+<p>本系列教程基于Flutter widget, 意在为Flutter 入门提供基础建设. 重点在讲解widget 的 用法,参数以及扩展. <br>适宜人群: 入门</p>
+</blockquote>
+<h2 id="引语"><a href="#引语" class="headerlink" title="引语"></a>引语</h2><p>SizedBox 是 Flutter 中较为常见的组件之一, 往往用于占位、描述控件尺寸等等. 本文将详细带你了解 SizedBox 在内部做了些什么?</p>
+<h2 id="命名方法"><a href="#命名方法" class="headerlink" title="命名方法"></a>命名方法</h2><p>除了本身的构造函数外, <strong>SizedBox 一共有 4 个命名方法</strong>, 它帮助我们更加便携的构建 SizedBox 对象. 我们用一个表格来简述它们的功能:</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>width</th>
+<th>height</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SizedBox.expand</td>
+<td>double.infintiy</td>
+<td>double.infinity</td>
+<td>在其父组件允许的范围内, 尽可能的大</td>
+</tr>
+<tr>
+<td>SizedBox.shrink</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>在其父组件允许的范围内, 尽可能的小</td>
+</tr>
+<tr>
+<td>SizedBox.fromSize</td>
+<td>size.with</td>
+<td>size.height</td>
+<td>根据传入的 size 创建一个盒子</td>
+</tr>
+<tr>
+<td>SizedBox.square</td>
+<td>dimension</td>
+<td>dimension</td>
+<td>根据传入的 dimension 创建一个长宽相等的盒子</td>
+</tr>
+</tbody></table>
+<p>通过这四种命名方法, 我们已经可以解决大多数遇到的尺寸问题. 而 SizedBox 的构造方法便是最终查缺补漏了.</p>
+<h2 id="RenderObject"><a href="#RenderObject" class="headerlink" title="RenderObject"></a>RenderObject</h2><p>在<strong>创建 SizedBox 时, 我们最终返回的是 RenderConstrainedBox</strong> . 也就是一个具备约束属性的 RenderObject. 我们传入的 <strong>additionalConstraints , 则是我们创建时所申明的 width、height 构造的 BoxConstraints</strong> . 在 RenderConstrainedBox 中并没有重写 paint 方法. 说明会走默认的绘制方法不受影响. 我们主要看一下它更改的地方.</p>
+<h3 id="performLayout"><a href="#performLayout" class="headerlink" title="performLayout"></a>performLayout</h3><p>在 performLayout 时, 如果<strong>没有 child , 尺寸会强行改为 Size.zero</strong> . 其实也可以理解, 这时的 SizedBox 在屏幕中并不会有显示仅占位. 如果<strong>有 child 时, child 会根据受 SizedBox 约束后的空间去布局 child. 这里 parentUsersSize 被赋值为 true</strong>, 说明当前的 SizedBox 会受 child 的尺寸影响, 在布局期间 SizedBox 需要获取 child 的尺寸信息.<br><br><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c910527ba4dd47489f90af006c22da65~tplv-k3u1fbpfcp-zoom-1.image" alt="image"></p>
+<h3 id="computeDryLayout"><a href="#computeDryLayout" class="headerlink" title="computeDryLayout"></a>computeDryLayout</h3><p>除此之外, computeDryLayout 也做了更新. SizedBox 在执行 DryLayout 时, 也会根据 child 的有无去动态计算 Size 大小. 这点和 performLayout 时的计算相同.<br><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e3e49f3c0de94dc7927cbe5bee524c89~tplv-k3u1fbpfcp-zoom-1.image" alt="image"></p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>这里是WeninerIo😇<br><br>如果你对这次的技术分享感兴趣或者有什么疑惑🧐<br><br>不妨在评论区留言或私信🤪<br><br>或许这次的分享不是你所期待的😣<br><br>那就点个关注吧! ❤️<br><br>下次也许就是你想看的呢🫣?<br></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://weniner.github.io">Weniner</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://weniner.github.io/2022/12/15/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BSizedBox/">https://weniner.github.io/2022/12/15/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BSizedBox/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://weniner.github.io" target="_blank">Weniner</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%8E%98%E9%87%91%C2%B7%E6%97%A5%E6%96%B0%E8%AE%A1%E5%88%92-Flutter-%E5%89%8D%E7%AB%AF/">掘金·日新计划 Flutter 前端</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/12/16/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BAspectRatio/"><img class="prev-cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Flutter 组件分析之AspectRatio</div></div></a></div><div class="next-post pull-right"><a href="/2022/12/14/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BOpacity/"><img class="next-cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Flutter 组件分析之Opacity</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/12/07/Flutter%20extension%E8%AF%A6%E8%A7%A3/" title="Flutter extension详解"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-07</div><div class="title">Flutter extension详解</div></div></a></div><div><a href="/2022/12/06/Flutter%20%E6%97%B6%E5%85%89%E5%88%87%E6%8D%A2%E6%95%88%E6%9E%9C/" title="Flutter 时光切换效果"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-06</div><div class="title">Flutter 时光切换效果</div></div></a></div><div><a href="/2022/12/11/Flutter%20%E6%9C%80%E5%B0%8F%E5%88%B7%E6%96%B0%E8%8C%83%E5%9B%B4%E6%8E%A2%E7%B4%A2%E4%B9%8B%20ValueListenableBuilder/" title="Flutter 最小刷新范围探索之 ValueListenableBuilder"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-11</div><div class="title">Flutter 最小刷新范围探索之 ValueListenableBuilder</div></div></a></div><div><a href="/2022/12/05/Flutter%20%E7%A1%AC%E6%A0%B8%E5%85%A5%E9%97%A8%E4%B9%8BContainer/" title="Flutter 硬核入门之Container"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-05</div><div class="title">Flutter 硬核入门之Container</div></div></a></div><div><a href="/2022/12/19/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8B%20AbsorbPointer/" title="Flutter 组件分析之 AbsorbPointer"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-19</div><div class="title">Flutter 组件分析之 AbsorbPointer</div></div></a></div><div><a href="/2022/12/16/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BAspectRatio/" title="Flutter 组件分析之AspectRatio"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-12-16</div><div class="title">Flutter 组件分析之AspectRatio</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://avatars.githubusercontent.com/u/37212120?v=4" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Weniner</div><div class="author-info__description">隐居山水之间誓与浮名散</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/weniner"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/weniner" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/weninerdroid@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">不定时更新博文</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%AF%AD"><span class="toc-number">1.</span> <span class="toc-text">引语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">命名方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RenderObject"><span class="toc-number">3.</span> <span class="toc-text">RenderObject</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#performLayout"><span class="toc-number">3.1.</span> <span class="toc-text">performLayout</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#computeDryLayout"><span class="toc-number">3.2.</span> <span class="toc-text">computeDryLayout</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">4.</span> <span class="toc-text">结语</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/04/07/Flutter%E4%BB%8ErunApp%E5%88%B0%E7%BB%98%E5%88%B6%E4%B8%8A%E5%B1%8F/" title="Flutter从runApp到绘制上屏"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Flutter从runApp到绘制上屏"/></a><div class="content"><a class="title" href="/2023/04/07/Flutter%E4%BB%8ErunApp%E5%88%B0%E7%BB%98%E5%88%B6%E4%B8%8A%E5%B1%8F/" title="Flutter从runApp到绘制上屏">Flutter从runApp到绘制上屏</a><time datetime="2023-04-07T09:48:52.000Z" title="发表于 2023-04-07 17:48:52">2023-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/12/30/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8B%20AnimatedAlign/" title="Flutter 组件分析之 AnimatedAlign"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Flutter 组件分析之 AnimatedAlign"/></a><div class="content"><a class="title" href="/2022/12/30/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8B%20AnimatedAlign/" title="Flutter 组件分析之 AnimatedAlign">Flutter 组件分析之 AnimatedAlign</a><time datetime="2022-12-30T07:18:17.000Z" title="发表于 2022-12-30 15:18:17">2022-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/12/29/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BDraggable/" title="Flutter 组件分析之Draggable"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Flutter 组件分析之Draggable"/></a><div class="content"><a class="title" href="/2022/12/29/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BDraggable/" title="Flutter 组件分析之Draggable">Flutter 组件分析之Draggable</a><time datetime="2022-12-29T10:05:18.000Z" title="发表于 2022-12-29 18:05:18">2022-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/12/28/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BOverflowBox/" title="Flutter 组件分析之OverflowBox"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Flutter 组件分析之OverflowBox"/></a><div class="content"><a class="title" href="/2022/12/28/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BOverflowBox/" title="Flutter 组件分析之OverflowBox">Flutter 组件分析之OverflowBox</a><time datetime="2022-12-28T09:32:47.000Z" title="发表于 2022-12-28 17:32:47">2022-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/12/24/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BMediaQuery/" title="Flutter 组件分析之MediaQuery"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Flutter 组件分析之MediaQuery"/></a><div class="content"><a class="title" href="/2022/12/24/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BMediaQuery/" title="Flutter 组件分析之MediaQuery">Flutter 组件分析之MediaQuery</a><time datetime="2022-12-24T01:54:04.000Z" title="发表于 2022-12-24 09:54:04">2022-12-24</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Weniner</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  var disqus_config = function () {
+    this.page.url = 'https://weniner.github.io/2022/12/15/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BSizedBox/'
+    this.page.identifier = '/2022/12/15/Flutter%20%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90%E4%B9%8BSizedBox/'
+    this.page.title = 'Flutter 组件分析之SizedBox'
+  };
+
+  window.disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+
+  document.getElementById('darkmode').addEventListener('click', () => {
+    setTimeout(() => window.disqusReset(), 200)
+  })
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
